@@ -1,6 +1,6 @@
 class MyClass:
     def __init__(self, a):
-        self._a = a
+        self.real_a = a
 
     real_a = property()
 
@@ -20,7 +20,5 @@ class MyClass:
 
 
 if __name__ == "__main__":
-    my_c = MyClass(5)
-    print(my_c)
-    my_c.real_a = 2
+    my_c = MyClass(-5)
     print(my_c)
