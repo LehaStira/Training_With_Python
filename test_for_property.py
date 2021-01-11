@@ -1,12 +1,4 @@
 class MyClass:
-    @property
-    def real_a(self):
-        return self._real_a
-
-    @property
-    def real_a(self):
-        return self._real_a
-
     def __init__(self, a):
         self._a = a
 
@@ -26,6 +18,9 @@ class MyClass:
     def __str__(self):
         return f'Значение а в данном объекте равно = {self.real_a}'
 
+
 if __name__ == "__main__":
     my_c = MyClass(5)
+    print(my_c)
+    my_c.real_a = 2
     print(my_c)
