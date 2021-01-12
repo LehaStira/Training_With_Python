@@ -134,6 +134,16 @@ def get_links_len(body):
                 break
         linkslen = max(linkslen, local_linklen)
         link_found = link_found.find_next('a')
+    return linkslen
+
+
+def get_lists(body):
+    lists = 0
+    html_lists = body.find_all(['ul', 'ol'])
+    for html_list in html_lists:
+        if not html_list.find_parents(['ul', 'ol']):
+            lists += 1
+    return lists
 
 def parse(path_to_file):
     # Поместите ваш код здесь.
@@ -151,8 +161,10 @@ def parse(path_to_file):
 
     linkslen = get_links_len(body)
 
-    return linkslen
-    #return [imgs,count]
+    lists = get_lists(body)
+
+
+    return [imgs, count, linkslen, lists]
     #return [imgs, headers, linkslen, lists]
 
 
