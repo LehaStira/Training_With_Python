@@ -122,7 +122,18 @@ def get_count_of_h(body):
     return res
 
 
-def get_links_len()
+def get_links_len(body):
+    linkslen = 0
+    link_found = body.find_next('a')
+    while link_found:
+        local_linklen = 1
+        for i in link_found.find_next_siblings():
+            if i.name == 'a':
+                local_linklen += 1
+            else:
+                break
+        linkslen = max(linkslen, local_linklen)
+        link_found = link_found.find_next('a')
 
 def parse(path_to_file):
     # Поместите ваш код здесь.
@@ -140,7 +151,8 @@ def parse(path_to_file):
 
     linkslen = get_links_len(body)
 
-    return [imgs,count]
+    return linkslen
+    #return [imgs,count]
     #return [imgs, headers, linkslen, lists]
 
 
