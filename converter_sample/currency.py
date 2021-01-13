@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 from decimal import Decimal
 import requests
+from pprint import pprint
 
 
 def get_soup(xml):
@@ -40,7 +41,7 @@ def convert(amount, cur_from, cur_to, date=None):
     amount - сумма
     cur_from - код валюты, в которой передано значение
     cur_to - код валюты, в которую надо переконвертировать значение (через рубль)
-
+    # код валюты находится в CharCode
 
     :param amount:
     :param cur_from:
@@ -53,22 +54,57 @@ def convert(amount, cur_from, cur_to, date=None):
     response = requests.get(ulr)  # Использовать переданный requests
 
     my_xml = response.content
-
+    print('Мы получили xml, выглядит как-то так:')
+    print()
+    pprint(my_xml)
+    print()
+    print()
     soup = get_soup(my_xml)
 
+    print('get_soup отработал, получили суп, выглядит как-то так: ')
+    print()
+    pprint(soup)
+    print()
+    print()
     first_nominal = get_nominal(soup, cur_from)
     second_nominal = get_nominal(soup, cur_to)
+
+    print('Функция get_nominal отработала дважды')
+    print()
+    print(f'first_nominal = {first_nominal}')
+    print(f'second_nominal = {second_nominal}')
+    print()
+    print()
 
     first_value = get_value(soup, cur_from)
     second_value = get_value(soup, cur_to)
 
+    print('Функция get_value отработала дважды')
+    print()
+    print(f'first_value = {first_value}')
+    print(f'second_value = {second_value}')
+    print()
+    print()
     first_result = get_course_of_exchange(nominal = first_nominal,
                                           value = first_value)
+
+    print('Функция get_course_of_exchange отработала 1 раз')
+    print()
+    print(f'first_result = {first_result}')
+    print()
+    print()
 
     second_result = get_course_of_exchange(nominal = second_nominal,
                                            value = second_value)
 
+    print('Функция get_course_of_exchange отработала 2 раз')
+    print()
+    print(f'second_result = {second_result}')
+    print()
+    print()
     res = _convert(amount, first_result, second_result)
+    print('Функция _convert отработала')
+    print(f'res = {res}')
     res = str(res)
 
     result = Decimal(res)
