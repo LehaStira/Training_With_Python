@@ -10,8 +10,16 @@ def get_soup(xml):
 
 
 def get_hyper_text_valute(soup, kod):
-    return soup.find('valute',
-                     id=kod)
+    all_valute =  soup.find_all('valute')
+    for i in all_valute:
+        print(f'Напоминаю, что мы ищем {kod}')
+        print('its one of iteration')
+        print(i.charcode.text)
+        print(kod == i.charcode.text)
+    res = [i for i in all_valute if i.charcode.text == kod]
+    print(len(res))
+    print(res)
+    return res[0]
 
 
 def get_nominal(soup, kod):
@@ -29,7 +37,9 @@ def get_value(soup, kod):
 
 
 def get_course_of_exchange(value, nominal):
-    return value/nominal
+    print(value)
+    print(nominal)
+    return Decimal(value)/Decimal(nominal)
 
 
 def _convert(amount, first_result, second_result):
