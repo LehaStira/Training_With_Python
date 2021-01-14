@@ -4,6 +4,16 @@ import requests
 from pprint import pprint
 
 
+def comaversuspoint(my_str):
+    new_str = ''
+    for i in my_str:
+        if i != ',':
+            new_str+=i
+        else:
+            new_str+='.'
+    return new_str
+
+
 def get_soup(xml):
     soup = BeautifulSoup(xml, 'lxml')
     return soup
@@ -11,11 +21,6 @@ def get_soup(xml):
 
 def get_hyper_text_valute(soup, kod):
     all_valute =  soup.find_all('valute')
-    for i in all_valute:
-        print(f'Напоминаю, что мы ищем {kod}')
-        print('its one of iteration')
-        print(i.charcode.text)
-        print(kod == i.charcode.text)
     res = [i for i in all_valute if i.charcode.text == kod]
     print(len(res))
     print(res)
@@ -23,44 +28,55 @@ def get_hyper_text_valute(soup, kod):
 
 
 def get_nominal(soup, kod):
+    print(f'Функция get_nominal начала работать с кодом {kod}')
     hyper_text = get_hyper_text_valute(soup, kod)
     hyper_text_nominal = hyper_text.nominal
     res = hyper_text_nominal.text
+    print(f'Функция get_nominal закончила работать с кодом {kod}')
+    print(f'Результат работы get_nominal = {res}')
     return res
 
 
 def get_value(soup, kod):
+    print(f'Функция get_value начала работать для кода {kod}')
     hyper_text = get_hyper_text_valute(soup, kod)
     hyper_text_value = hyper_text.value
     res = hyper_text_value.text
+    print(f'Функция get_value отработала, результат - {res}')
     return res
 
 
 def get_course_of_exchange(value, nominal):
-    print(value)
-    print(nominal)
+    value = comaversuspoint(value)
+    nominal = comaversuspoint(nominal)
     return Decimal(value)/Decimal(nominal)
 
 
 def _convert(amount, first_result, second_result):
-    return amount / first_result * second_result
+    amount = str(amount)
+    amount = Decimal(amount)
+    print(f'amount в функции _convert выглядит так {amount}')
+    print(f'first_result в функции _convert выглядит так {first_result}')
+    print(f'second_result в функции _convert выглядит так {second_result}')
+    res = (amount * first_result) / second_result
+    print(f'res до округления выглядит так: {res}')
+    res = res.quantize(Decimal('1.0000'))
+    print(f'res после округления выглядит так: {res}')
+    return res
 
 
-def convert(amount, cur_from, cur_to, date=None):
+def convert(amount, cur_from, cur_to, date):
     """
-    amount - сумма
-    cur_from - код валюты, в которой передано значение
-    cur_to - код валюты, в которую надо переконвертировать значение (через рубль)
-    # код валюты находится в CharCode
 
-    :param amount:
-    :param cur_from:
-    :param cur_to:
-    :param date:
-    :param requests:
+     код валюты находится в CharCode
+
+    :param amount: сумма
+    :param cur_from: код валюты, в которой передано значение
+    :param cur_to: код валюты, в которую надо переконвертировать значение (через рубль)
+    :param date:  дата, по которой делать API запрос
     :return:
     """
-    ulr = 'http://www.cbr.ru/scripts/XML_daily.asp?date_req=01/01/2021'
+    ulr = f'http://www.cbr.ru/scripts/XML_daily.asp?date_req={date}'
     response = requests.get(ulr)  # Использовать переданный requests
 
     my_xml = response.content
