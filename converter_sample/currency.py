@@ -68,7 +68,6 @@ def _convert(amount, first_result, second_result):
 def convert(amount, cur_from, cur_to, date):
     """
 
-     код валюты находится в CharCode
 
     :param amount: сумма
     :param cur_from: код валюты, в которой передано значение
